@@ -7,6 +7,7 @@
 # == Authors
 #
 # Samuli Seppänen <samuli@openvpn.net>
+# Samuli Seppänen <samuli.seppanen@gmail.com>
 #
 # == License
 #
