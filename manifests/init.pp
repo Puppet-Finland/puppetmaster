@@ -17,7 +17,7 @@
 class puppetmaster {
 
 # Rationale for this is explained in init.pp of the sshd module
-if hiera('manage_puppetmaster') != 'false' {
+if hiera('manage_puppetmaster', 'true') != 'false' {
 
     # This class does nothing at the moment, but is still needed for the 
     # puppetmaster::allow define.
