@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# This returns the IP address bound to a given FQDN and strips away the
+# linefeed. This is used primarily to figure out valid, public IP addresses for
+# nodes at the puppetmaster. This is very useful with exported firewall
+# resources, because in many cases (e.g. on EC2) the $ipaddress fact returned by
+# facter is useless as it points to a private IP.
+
+dig $1 +short $2|tr -d "\n"
+
