@@ -1,0 +1,26 @@
+#!/bin/sh
+#
+# check-a-records.sh
+#
+# This script verifies that all Puppet nodes have valid DNS records. This is
+# particularly useful trick when some modules require realization of exported
+# firewall resources coming from multiple nodes. This is the case, for example,
+# for the bacula-storagedaemon class which gets it's firewall resources from the
+# bacula-filedaemon nodes, and any missing or duplicate IP addresses would cause
+# a puppet run to bail out.
+#
+# This script operates on a node list based on signed Puppet certificates, and
+# thus requires that the certificate name matches the DNS name of the nodes.
+
+puppet cert list --all|grep -E "^\+ \""|cut -d "\"" -f 2|while read NODE; do
+
+    DIG_OUTPUT=`dig -4 +short $NODE`
+
+    # This command will return 0 (A record not found) or 1 (A record found).
+    HAS_A_RECORD=`echo $DIG_OUTPUT|wc --lines`
+
+    # Warn us about missing A records
+    if [ $HAS_A_RECORD -eq 0 ]; then
+        echo "Puppetmaster warning: $NODE is missing an A record in DNS"
+    fi
+done
