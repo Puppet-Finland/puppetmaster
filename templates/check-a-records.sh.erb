@@ -16,11 +16,8 @@ puppet cert list --all|grep -E "^\+ \""|cut -d "\"" -f 2|while read NODE; do
 
     DIG_OUTPUT=`dig -4 +short $NODE`
 
-    # This command will return 0 (A record not found) or 1 (A record found).
-    HAS_A_RECORD=`echo $DIG_OUTPUT|wc --lines`
-
     # Warn us about missing A records
-    if [ $HAS_A_RECORD -eq 0 ]; then
+    if [ "$DIG_OUTPUT" = "" ]; then
         echo "Puppetmaster warning: $NODE is missing an A record in DNS"
     fi
 done
