@@ -7,12 +7,12 @@
 # == Authors
 #
 # Samuli Seppänen <samuli@openvpn.net>
+#
 # Samuli Seppänen <samuli.seppanen@gmail.com>
 #
 # == License
 #
-# BSD-lisence
-# See file LICENSE for details
+# BSD-lisence. See file LICENSE for details.
 #
 class puppetmaster {
 

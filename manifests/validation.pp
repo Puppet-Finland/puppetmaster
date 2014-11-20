@@ -28,10 +28,10 @@
 #
 # == Examples
 #
-# class { 'puppetmaster::validation':
-#   dirs => '/etc/puppet /opt/puppet',
-#   email => 'puppetadmin@domain.com',
-# }
+#   class { 'puppetmaster::validation':
+#       dirs => '/etc/puppet /opt/puppet',
+#       email => 'puppetadmin@domain.com',
+#   }
 #
 class puppetmaster::validation
 (
