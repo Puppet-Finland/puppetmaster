@@ -8,13 +8,15 @@
 #
 # [*check_erb*]
 #   Check ERB template syntax. Valid values are 'yes' and 'no'. Defaults to 'yes'.
+# [*check_pp*]
+#   Check Puppet code syntax. Valid values are 'yes' and 'no'. Defaults to 'yes'.
 # [*check_a_records*]
 #   Check that all node certnames have valid DNS A records associated to them. 
 #   Valid values are 'yes' and 'no'. Defaults to 'no'. This check is useful when 
 #   using exported firewall resources and $ipaddress facts return silly values. 
 #   Note that the "dig" utility is required for this check to work.
 # [*dirs*]
-#   A space-separated list of directories to run the ERB checks in. Defaults to 
+#   A space-separated list of directories to run the syntax checks in. Defaults to 
 #   '/etc/puppet'.
 # [*hour*]
 #   Hour(s) when the checks are run. Defaults to '12'.
@@ -36,6 +38,7 @@
 class puppetmaster::validation
 (
     $check_erb = 'yes',
+    $check_pp = 'yes',
     $check_a_records = 'no',
     $dirs = '/etc/puppet',
     $hour = '12',
@@ -53,6 +56,20 @@ class puppetmaster::validation
             default => 'absent',
         },
         command => "find ${dirs} -name \"*.erb\" -exec sh -c \"erb -P -x -T '-' {}|ruby -c\" \; > /dev/null",
+        user => root,
+        hour => $hour,
+        minute => $minute,
+        weekday => $weekday,
+        environment => "MAILTO=${email}",
+    }
+
+    ### Puppet code syntax check
+    cron { 'puppetmaster-pp-check':
+        ensure => $check_erb ? {
+            'yes' => 'present',
+            default => 'absent',
+        },
+        command => "find ${dirs} -name \"*.pp\" -exec puppet parser validate {} \;",
         user => root,
         hour => $hour,
         minute => $minute,
