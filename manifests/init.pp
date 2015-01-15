@@ -4,6 +4,13 @@
 # Configure various aspects of a puppetmaster. Currently only manages 
 # iptables/ip6tables rules through use of the puppetmaster::allow define.
 #
+#
+# == Parameters
+#
+# [*allows*]
+#   A hash of puppetmaster::allow resources used to allow access to the 
+#   Puppetmaster through the firewall.
+#
 # == Authors
 #
 # Samuli Seppänen <samuli@openvpn.net>
@@ -12,12 +19,19 @@
 #
 # == License
 #
-# BSD-lisence. See file LICENSE for details.
+# BSD-license. See file LICENSE for details.
 #
-class puppetmaster {
+class puppetmaster
+(
+    $allows = {}
+)
+{
 
 # Rationale for this is explained in init.pp of the sshd module
 if hiera('manage_puppetmaster', 'true') != 'false' {
+
+    # We need to have "dig" installed    
+    include dnsutils
 
     # Install a script used for checking a node's IP at the puppetmaster side. 
     # This is useful/necessary if using exported (firewall) resources and the 
@@ -32,6 +46,11 @@ if hiera('manage_puppetmaster', 'true') != 'false' {
         owner => root,
         group => root,
         mode => 755,
+        require => Class['dnsutils::install'],
+    }
+
+    if tagged('packetfilter') {
+        create_resources('puppetmaster::allow', $allows)
     }
 }
 }
