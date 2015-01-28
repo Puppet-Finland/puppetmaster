@@ -55,7 +55,7 @@ class puppetmaster::validation
             'yes' => 'present',
             default => 'absent',
         },
-        command => "find ${dirs} -name \"*.erb\" -exec sh -c \"erb -P -x -T '-' {}|ruby -c\" + > /dev/null",
+        command => "find ${dirs} -name \"*.erb\" -exec sh -c \"erb -P -x -T '-' {}|ruby -c\" \; > /dev/null",
         user => root,
         hour => $hour,
         minute => $minute,
