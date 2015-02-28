@@ -10,6 +10,8 @@
 #   Check ERB template syntax. Valid values are 'yes' and 'no'. Defaults to 'yes'.
 # [*check_pp*]
 #   Check Puppet code syntax. Valid values are 'yes' and 'no'. Defaults to 'yes'.
+# [*check_json*]
+#   Check JSON file syntax. Valid values are 'yes' and 'no'. Defaults to 'yes'.
 # [*check_a_records*]
 #   Check that all node certnames have valid DNS A records associated to them. 
 #   Valid values are 'yes' and 'no'. Defaults to 'no'. This check is useful when 
@@ -39,6 +41,7 @@ class puppetmaster::validation
 (
     $check_erb = 'yes',
     $check_pp = 'yes',
+    $check_json = 'yes',
     $check_a_records = 'no',
     $dirs = '/etc/puppet',
     $hour = '12',
@@ -47,7 +50,6 @@ class puppetmaster::validation
     $email = $::servermonitor
 )
 {
-
 
     ### ERB template check
     cron { 'puppetmaster-erb-check':
@@ -75,6 +77,34 @@ class puppetmaster::validation
         minute => $minute,
         weekday => $weekday,
         environment => "MAILTO=${email}",
+    }
+
+
+    ### JSON file syntax check
+    file { 'puppetmaster-check_json.sh':
+        name => '/usr/local/bin/check_json.sh',
+        ensure => $check_json ? {
+            'yes' => 'present',
+            default => 'absent',
+        },
+        content => template('puppetmaster/check_json.sh.erb'),
+        owner => root,
+        group => root,
+        mode => 755,
+    }
+
+    cron { 'puppetmaster-json-check':
+        ensure => $check_json ? {
+            'yes' => 'present',
+            default => 'absent',
+        },
+        command => '/usr/local/bin/check_json.sh',
+        user => root,
+        hour => $hour,
+        minute => $minute,
+        weekday => $weekday,
+        environment => "MAILTO=${email}",
+        require => File['puppetmaster-check_json.sh'],
     }
 
     ### DNS A record check

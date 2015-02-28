@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# Validate syntax of JSON files in given directories
+
+for JSON_FILE in `find <%= dirs %> -name "*.json" -print`; do
+    cat $JSON_FILE|json_pp -f json -t null > /dev/null
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Failed to parse $JSON_FILE!"
+    fi
+done
