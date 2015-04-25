@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# Check syntax of ERB files recursively in a given directory
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+
+find $@ -name "*.erb" -exec sh -c "erb -P -x -T '-' {}|ruby -c" \; > /dev/null

@@ -26,15 +26,16 @@ class puppetmaster::cleanup
     $minute = '15',
     $weekday = '*',
     $email = $::servermonitor
-)
+
+) inherits puppetmaster::params
 {
     cron { 'puppetmaster-clean-reports':
-        ensure => present,
-        command => "find /var/lib/puppet/reports -name \"*.yaml\" -mtime +${max_report_age} -exec rm -f {} \; > /dev/null",
-        user => root,
-        hour => $hour,
-        minute => $minute,
-        weekday => $weekday,
+        ensure      => present,
+        command     => "find /var/lib/puppet/reports -name \"*.yaml\" -mtime +${max_report_age} -exec rm -f {} \; > /dev/null",
+        user        => $::os::params::adminuser,
+        hour        => $hour,
+        minute      => $minute,
+        weekday     => $weekday,
         environment => "MAILTO=${email}",
     }
 }

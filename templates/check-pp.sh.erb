@@ -1,0 +1,10 @@
+#!/bin/sh
+#
+# Check syntax of PP files recursively in a given directory
+
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
+
+# The parser will give stupid warnings about storeconfigs and occasionally barfs
+# on Execs which use "find". Hence we only report errors, not warnings.
+#
+find $@ -name "*.pp" -exec puppet parser validate --color=false {} + 2>&1|grep Error

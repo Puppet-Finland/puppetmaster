@@ -28,23 +28,23 @@ define puppetmaster::allow
 )
 {
 
-    include puppetmaster
+    include ::puppetmaster::params
 
     firewall { "005 ipv4 accept from ${title} to puppetmaster":
         provider => 'iptables',
-        chain  => 'INPUT',
-        proto => 'tcp',
-        source => $allow_address_ipv4,
-        dport => 8140,
-        action => 'accept',
+        chain    => 'INPUT',
+        proto    => 'tcp',
+        source   => $allow_address_ipv4,
+        dport    => 8140,
+        action   => 'accept',
     }
 
     firewall { "005 ipv6 accept from ${title} to puppetmaster":
         provider => 'ip6tables',
-        chain  => 'INPUT',
-        proto => 'tcp',
-        source => $allow_address_ipv6,
-        dport => 8140,
-        action => 'accept',
+        chain    => 'INPUT',
+        proto    => 'tcp',
+        source   => $allow_address_ipv6,
+        dport    => 8140,
+        action   => 'accept',
     }
 }
