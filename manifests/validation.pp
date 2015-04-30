@@ -23,6 +23,16 @@
 # [*dirs*]
 #   A space-separated list of directories to run the syntax checks in. Defaults to 
 #   '/etc/puppet'.
+# [*submodule_check*]
+#   Status of Git submodule checks, such as "check if there are uncommitted 
+#   changes" or "check if a submodule is ahead of its origin". Valid values are 
+#   'present' and 'absent' (default). You will also have to set $submodule_dir 
+#   correctly for these checks to work.
+# [*submodule_dir*]
+#   Location of the Puppet module directory. Defaults to 
+#   '/etc/puppet/environments/production/modules'. Each Puppet module should 
+#   also be a Git submodule. If $submodule_check is not 'present', then the 
+#   value of this parameter has no effect.
 # [*a_record_check*]
 #   Check that all node certnames have valid DNS A records associated to them. 
 #   Valid values are 'present' and 'absent'. Defaults to 'absent'. This check is 
@@ -84,6 +94,8 @@ class puppetmaster::validation
     $puppet_lint_check = 'present',
     $puppet_lint_opts = undef,
     $dirs = '/etc/puppet',
+    $submodule_check = 'absent',
+    $submodule_dir = '/etc/puppet/environments/production/modules',
     $a_record_check = 'absent',
     $hour = '12',
     $minute = '15',
@@ -99,14 +111,14 @@ class puppetmaster::validation
     File {
         owner => $::os::params::adminuser,
         group => $::os::params::admingroup,
-        mode => '0755',
+        mode  => '0755',
     }
     Cron {
-        user => $::os::params::adminuser,
-        hour => $hour,
-        minute => $minute,
-        weekday => $weekday,
-        environment => "MAILTO=${email}",
+        user        => $::os::params::adminuser,
+        hour        => $hour,
+        minute      => $minute,
+        weekday     => $weekday,
+        environment => ["MAILTO=${email}", 'PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin'],
     }
 
     # Setup the interactive pvalidate.sh script which runs all these tests in 
@@ -115,6 +127,9 @@ class puppetmaster::validation
     if $erb_check == 'present'         { $erb_check_line         = "${scriptdir}/check-erb.sh ."         }
     if $pp_check == 'present'          { $pp_check_line          = "${scriptdir}/check-pp.sh ."          }
     if $puppet_lint_check == 'present' { $puppet_lint_check_line = "${scriptdir}/check-puppet-lint.sh ." }
+    if $submodule_check == 'present'   {
+        $submodule_ahead_of_check_line = "cd ${submodule_dir} && git submodule foreach \"git status\"|grep -B 2 \"ahead of\""
+    }
 
     file { 'puppetmaster-pvalidate.sh':
         ensure  => present,
@@ -178,6 +193,10 @@ class puppetmaster::validation
         command => "${scriptdir}/check-a-records.sh",
     }
 
-
+    # Git submodule checks
+    cron { 'puppetmaster-submodule_ahead_of_check':
+        ensure  => $submodule_check,
+        command => $submodule_ahead_of_check_line,
+    }
 
 }
