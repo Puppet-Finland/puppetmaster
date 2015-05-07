@@ -123,13 +123,11 @@ class puppetmaster::validation
 
     # Setup the interactive pvalidate.sh script which runs all these tests in 
     # the current directory.
-    if $json_check == 'present'        { $json_check_line        = "${scriptdir}/check-json.sh ."        }
-    if $erb_check == 'present'         { $erb_check_line         = "${scriptdir}/check-erb.sh ."         }
-    if $pp_check == 'present'          { $pp_check_line          = "${scriptdir}/check-pp.sh ."          }
-    if $puppet_lint_check == 'present' { $puppet_lint_check_line = "${scriptdir}/check-puppet-lint.sh ." }
-    if $submodule_check == 'present'   {
-        $submodule_ahead_of_check_line = "cd ${submodule_dir} && git submodule foreach \"git status\"|grep -B 2 \"ahead of\""
-    }
+    $json_check_line               = "${scriptdir}/check-json.sh ."
+    $erb_check_line                = "${scriptdir}/check-erb.sh ."
+    $pp_check_line                 = "${scriptdir}/check-pp.sh ."
+    $puppet_lint_check_line        = "${scriptdir}/check-puppet-lint.sh ."
+    $submodule_ahead_of_check_line = "cd ${submodule_dir} && git submodule foreach \"git status\"|grep -B 2 \"ahead of\""
 
     file { 'puppetmaster-pvalidate.sh':
         ensure  => present,
@@ -139,7 +137,7 @@ class puppetmaster::validation
 
     # JSON check
     file { 'puppetmaster-check-json.sh':
-        ensure  => $json_check,
+        ensure  => present,
         name    => "${scriptdir}/check-json.sh",
         content => template('puppetmaster/check-json.sh.erb'),
     }
@@ -150,7 +148,7 @@ class puppetmaster::validation
 
     # ERB check
     file { 'puppetmaster-check-erb.sh':
-        ensure  => $erb_check,
+        ensure  => present,
         name    => "${scriptdir}/check-erb.sh",
         content => template('puppetmaster/check-erb.sh.erb'),
     }
@@ -161,7 +159,7 @@ class puppetmaster::validation
 
     # Puppet manifest syntax check
     file { 'puppetmaster-check-pp.sh':
-        ensure  => $pp_check,
+        ensure  => present,
         name    => "${scriptdir}/check-pp.sh",
         content => template('puppetmaster/check-pp.sh.erb'),
     }
@@ -172,7 +170,7 @@ class puppetmaster::validation
 
     # puppet-lint check
     file { 'puppetmaster-check-puppet-lint.sh':
-        ensure  => $puppet_lint_check,
+        ensure  => present,
         name    => "${scriptdir}/check-puppet-lint.sh",
         content => template('puppetmaster/check-puppet-lint.sh.erb'),
     }
@@ -183,7 +181,7 @@ class puppetmaster::validation
 
     # DNS A record check
     file { 'puppetmaster-check-a-records.sh':
-        ensure  => $a_record_check,
+        ensure  => present,
         name    => '/usr/local/bin/check-a-records.sh',
         content => template('puppetmaster/check-a-records.sh.erb'),
     }
