@@ -4,7 +4,7 @@
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
-PUPPET_LINT_OPTS="<% if @puppet_lint_opts %><%= puppet_lint_opts %><% end -%>"
+PUPPET_LINT_OPTS="<% if @puppet_lint_opts %><%= @puppet_lint_opts %><% end -%>"
 
 for DIR in $@; do
     puppet-lint $PUPPET_LINT_OPTS $DIR
