@@ -21,8 +21,7 @@
 # [*puppet_lint_opts*]
 #   Options to pass to puppet-lint. Undefined by default.
 # [*dirs*]
-#   A space-separated list of directories to run the syntax checks in. Defaults to 
-#   '/etc/puppet'.
+#   An array of paths to run the syntax checks in. Defaults to ['/etc/puppet'].
 # [*submodule_check*]
 #   Status of Git submodule checks, such as "check if there are uncommitted 
 #   changes" or "check if a submodule is ahead of its origin". Valid values are 
@@ -82,7 +81,7 @@
 # == Examples
 #
 #   class { 'puppetmaster::validation':
-#       dirs => '/etc/puppet /opt/puppet',
+#       dirs => ['/etc/puppet', '/opt/puppet'],
 #       email => 'puppetadmin@domain.com',
 #   }
 #
@@ -93,7 +92,7 @@ class puppetmaster::validation
     $pp_check = 'present',
     $puppet_lint_check = 'present',
     $puppet_lint_opts = undef,
-    $dirs = '/etc/puppet',
+    $dirs = ['/etc/puppet'],
     $submodule_check = 'absent',
     $submodule_dir = '/etc/puppet/environments/production/modules',
     $a_record_check = 'absent',
@@ -104,6 +103,8 @@ class puppetmaster::validation
 
 ) inherits puppetmaster::params
 {
+    # Convert $dirs parameter to a string
+    $dirlist = join($dirs, ' ')
 
     $scriptdir = '/usr/local/bin'
 
@@ -143,7 +144,7 @@ class puppetmaster::validation
     }
     cron { 'puppetmaster-json-check':
         ensure  => $json_check,
-        command => "${scriptdir}/check-json.sh ${dirs}",
+        command => "${scriptdir}/check-json.sh ${dirlist}",
     }
 
     # ERB check
@@ -154,7 +155,7 @@ class puppetmaster::validation
     }
     cron { 'puppetmaster-erb-check':
         ensure  => $erb_check,
-        command => "${scriptdir}/check-erb.sh ${dirs}",
+        command => "${scriptdir}/check-erb.sh ${dirlist}",
     }
 
     # Puppet manifest syntax check
@@ -165,7 +166,7 @@ class puppetmaster::validation
     }
     cron { 'puppetmaster-pp-check':
         ensure  => $pp_check,
-        command => "${scriptdir}/check-pp.sh ${dirs}",
+        command => "${scriptdir}/check-pp.sh ${dirlist}",
     }
 
     # puppet-lint check
@@ -176,7 +177,7 @@ class puppetmaster::validation
     }
     cron { 'puppetmaster-puppet-lint-check':
         ensure  => $puppet_lint_check,
-        command => "${scriptdir}/check-puppet-lint.sh ${dirs}",
+        command => "${scriptdir}/check-puppet-lint.sh ${dirlist}",
     }
 
     # DNS A record check
