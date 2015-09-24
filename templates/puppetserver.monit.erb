@@ -1,0 +1,8 @@
+### THIS FILE IS MANAGED BY PUPPET. ANY MANUAL CHANGES WILL GET OVERWRITTEN.
+
+check process puppetserver with pidfile <%= scope.lookupvar('puppetmaster::params::pidfile') %>
+   start program = "<%= scope.lookupvar('puppetmaster::params::service_start') %>"
+   stop  program = "<%= scope.lookupvar('puppetmaster::params::service_stop') %>"
+   alert <%= scope.lookupvar('puppetmaster::monit::monitor_email') %> with reminder on 480 cycles
+
+
