@@ -31,7 +31,7 @@ class puppetmaster::cleanup
 {
     cron { 'puppetmaster-clean-reports':
         ensure      => present,
-        command     => "find /var/lib/puppet/reports -name \"*.yaml\" -mtime +${max_report_age} -exec rm -f {} + > /dev/null",
+        command     => "find /opt/puppetlabs/server/data/puppetserver/reports -type f -name \"*.yaml\" -mtime +${max_report_age} -exec rm -f {} + > /dev/null",
         user        => $::os::params::adminuser,
         hour        => $hour,
         minute      => $minute,
