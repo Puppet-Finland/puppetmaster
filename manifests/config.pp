@@ -11,7 +11,7 @@ class puppetmaster::config
 
 ) inherits puppetmaster::params
 {
-    if $puppetdb_host {
+    if $manage_puppetdb {
         class { '::puppetmaster::config::puppetdb':
             puppetdb_proto => $puppetdb_proto,
             puppetdb_host  => $puppetdb_host,
