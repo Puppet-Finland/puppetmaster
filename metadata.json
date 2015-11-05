@@ -1,6 +1,6 @@
 {
   "name": "puppetfinland-puppetmaster",
-  "version": "0.4.1",
+  "version": "1.0.0",
   "author": "Puppet-Finland team",
   "license": "BSD license",
   "summary": "Various useful puppetmaster configurations",
