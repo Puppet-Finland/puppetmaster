@@ -5,6 +5,7 @@
 #
 class puppetmaster::config
 (
+    $manage_puppetdb,
     $puppetdb_proto,
     $puppetdb_host,
     $puppetdb_port

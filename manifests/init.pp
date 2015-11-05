@@ -55,9 +55,10 @@ if $manage {
     include ::puppetmaster::getip
 
     class { '::puppetmaster::config':
-        puppetdb_proto => $puppetdb_proto,
-        puppetdb_host  => $puppetdb_host,
-        puppetdb_port  => $puppetdb_port,
+        manage_puppetdb => $manage_puppetdb,
+        puppetdb_proto  => $puppetdb_proto,
+        puppetdb_host   => $puppetdb_host,
+        puppetdb_port   => $puppetdb_port,
     }
 
     include ::puppetmaster::service
