@@ -20,6 +20,15 @@
 # [*puppetdb_port*]
 #   Port in which PuppetDB listens for incoming connections. Defaults to '8081', 
 #   which is typically the only valid option.
+# [*file_mode*]
+#   Mode for managed files. Defaults to '0644'. You may want to change this if 
+#   if you're setting Extended ACLs on these files - those may lure the Puppet 
+#   File resource to thinking (on every run) that file permissions have changed, 
+#   which in turn will trigger Puppetserver and/or PuppetDB restarts. The ACLs 
+#   are very useful when several administrators must be able to edit files under 
+#   /etc/puppetlabs as themselves, which is useful when /etc/puppetlabs is a Git 
+#   repository and you want to ensure that commits are traceable to their real 
+#   author instead of root@server.domain.com or similar.
 # [*allows*]
 #   A hash of puppetmaster::allow resources used to allow access to the 
 #   Puppetmaster through the firewall.
@@ -44,6 +53,7 @@ class puppetmaster
     $puppetdb_proto = 'https',
     $puppetdb_host = 'puppet',
     $puppetdb_port = '8081',
+    $file_mode = '0644',
     $monitor_email = $::servermonitor,
     $allows = {}
 )
@@ -59,6 +69,7 @@ if $manage {
         puppetdb_proto  => $puppetdb_proto,
         puppetdb_host   => $puppetdb_host,
         puppetdb_port   => $puppetdb_port,
+        file_mode       => $file_mode,
     }
 
     include ::puppetmaster::service

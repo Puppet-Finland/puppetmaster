@@ -8,7 +8,8 @@ class puppetmaster::config
     $manage_puppetdb,
     $puppetdb_proto,
     $puppetdb_host,
-    $puppetdb_port
+    $puppetdb_port,
+    $file_mode
 
 ) inherits puppetmaster::params
 {
@@ -17,6 +18,7 @@ class puppetmaster::config
             puppetdb_proto => $puppetdb_proto,
             puppetdb_host  => $puppetdb_host,
             puppetdb_port  => $puppetdb_port,
+            file_mode      => $file_mode,
         }
     }
 }

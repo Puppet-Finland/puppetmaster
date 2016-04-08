@@ -7,7 +7,8 @@ class puppetmaster::config::puppetdb
 (
     $puppetdb_proto,
     $puppetdb_host,
-    $puppetdb_port
+    $puppetdb_port,
+    $file_mode
 
 ) inherits puppetmaster::params
 {
@@ -16,7 +17,7 @@ class puppetmaster::config::puppetdb
     File {
         owner => $::os::params::adminuser,
         group => $::os::params::admingroup,
-        mode  => '0644',
+        mode  => $file_mode,
         notify  => Class['puppetmaster::service'],
     }
 
