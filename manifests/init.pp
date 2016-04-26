@@ -11,7 +11,13 @@
 #   are true and false.
 # [*manage_puppetdb*]
 #   Manage PuppetDB configuration for the Puppetmaster. Valid values are true 
-#   (default) and false.
+#   and false (default).
+# [*manage_acls*]
+#   Manage Extended ACLs for /etc/puppetlabs. Valid values are true (default)
+#   and false. See manifests/acl.pp for details and rationale.
+# [*acl_group*]
+#   The system group for which to grant access to /etc/puppetlabs. Defaults to
+#   $::os::params::sudogroup.
 # [*puppetdb_proto*]
 #   PuppetDB's protocol. Defaults to 'https', which is typically the only valid 
 #   choice.
@@ -21,14 +27,11 @@
 #   Port in which PuppetDB listens for incoming connections. Defaults to '8081', 
 #   which is typically the only valid option.
 # [*file_mode*]
-#   Mode for managed files. Defaults to '0644'. You may want to change this if 
-#   if you're setting Extended ACLs on these files - those may lure the Puppet 
-#   File resource to thinking (on every run) that file permissions have changed, 
-#   which in turn will trigger Puppetserver and/or PuppetDB restarts. The ACLs 
-#   are very useful when several administrators must be able to edit files under 
-#   /etc/puppetlabs as themselves, which is useful when /etc/puppetlabs is a Git 
-#   repository and you want to ensure that commits are traceable to their real 
-#   author instead of root@server.domain.com or similar.
+#   Mode for managed files. Defaults to '0654'. This is somewhat unconventional,
+#   but is required when using puppetmaster::acl class; without these
+#   permissions the File resource thinks (on every run) that file permissions
+#   have changed, which in turn will trigger Puppetserver and/or PuppetDB
+#   restarts.
 # [*allows*]
 #   A hash of puppetmaster::allow resources used to allow access to the 
 #   Puppetmaster through the firewall.
@@ -50,10 +53,12 @@ class puppetmaster
 (
     $manage = true,
     $manage_puppetdb = true,
+    $manage_acls = false,
+    $acl_group = undef,
     $puppetdb_proto = 'https',
     $puppetdb_host = 'puppet',
     $puppetdb_port = '8081',
-    $file_mode = '0644',
+    $file_mode = '0654',
     $monitor_email = $::servermonitor,
     $allows = {}
 )
@@ -73,6 +78,12 @@ if $manage {
     }
 
     include ::puppetmaster::service
+
+    if $manage_acls {
+        class { '::puppetmaster::acl':
+            group => $acl_group,
+        }
+    }
 
     if tagged('monit') {
         class { '::puppetmaster::monit':
