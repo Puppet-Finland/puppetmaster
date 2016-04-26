@@ -94,7 +94,7 @@ class puppetmaster::validation
     Enum['present','absent'] $submodule_check = 'absent',
     Enum['present','absent'] $a_record_check = 'absent',
     Optional[String]         $puppet_lint_opts = undef,
-    $dirs = ['/etc/puppetlabs/code'],
+    Array                    $dirs = ['/etc/puppetlabs/code'],
     String                   $submodule_dir = '/etc/puppetlabs/code/environments/production/modules',
     Variant[String, Integer] $hour = '12',
     Variant[String, Integer] $minute = '15',
