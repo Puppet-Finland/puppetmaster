@@ -87,19 +87,19 @@
 #
 class puppetmaster::validation
 (
-    $json_check = 'present',
-    $erb_check = 'present',
-    $pp_check = 'present',
-    $puppet_lint_check = 'present',
-    $puppet_lint_opts = undef,
+    Enum['present','absent'] $json_check = 'present',
+    Enum['present','absent'] $erb_check = 'present',
+    Enum['present','absent'] $pp_check = 'present',
+    Enum['present','absent'] $puppet_lint_check = 'present',
+    Enum['present','absent'] $submodule_check = 'absent',
+    Enum['present','absent'] $a_record_check = 'absent',
+    Optional[String]         $puppet_lint_opts = undef,
     $dirs = ['/etc/puppetlabs/code'],
-    $submodule_check = 'absent',
-    $submodule_dir = '/etc/puppetlabs/code/environments/production/modules',
-    $a_record_check = 'absent',
-    $hour = '12',
-    $minute = '15',
-    $weekday = '*',
-    $email = $::servermonitor
+    String                   $submodule_dir = '/etc/puppetlabs/code/environments/production/modules',
+    Variant[String, Integer] $hour = '12',
+    Variant[String, Integer] $minute = '15',
+    Variant[String, Integer] $weekday = '*',
+    String                   $email = $::servermonitor
 
 ) inherits puppetmaster::params
 {

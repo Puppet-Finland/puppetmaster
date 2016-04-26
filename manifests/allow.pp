@@ -23,8 +23,8 @@
 #
 define puppetmaster::allow
 (
-    $allow_address_ipv4='127.0.0.1',
-    $allow_address_ipv6='::1/128'
+    String $allow_address_ipv4='127.0.0.1',
+    String $allow_address_ipv6='::1/128'
 )
 {
 

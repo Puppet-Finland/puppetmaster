@@ -5,7 +5,7 @@
 #
 class puppetmaster::monit
 (
-    $monitor_email
+    String $monitor_email
 )
 {
     monit::fragment { 'puppetmaster-puppetserver.monit':

@@ -24,7 +24,7 @@
 # [*puppetdb_host*]
 #   Host on which PuppetDB runs. Defaults to 'puppet'.
 # [*puppetdb_port*]
-#   Port in which PuppetDB listens for incoming connections. Defaults to '8081', 
+#   Port in which PuppetDB listens for incoming connections. Defaults to 8081, 
 #   which is typically the only valid option.
 # [*file_mode*]
 #   Mode for managed files. Defaults to '0654'. This is somewhat unconventional,
@@ -57,7 +57,7 @@ class puppetmaster
     $acl_group = undef,
     $puppetdb_proto = 'https',
     $puppetdb_host = 'puppet',
-    $puppetdb_port = '8081',
+    $puppetdb_port = 8081,
     $file_mode = '0654',
     $monitor_email = $::servermonitor,
     $allows = {}

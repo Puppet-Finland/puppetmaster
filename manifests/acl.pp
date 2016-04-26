@@ -18,7 +18,7 @@
 #
 class puppetmaster::acl
 (
-    $group = undef
+    Optional[String] $group = undef
 
 ) inherits puppetmaster::params {
 

@@ -21,11 +21,11 @@
 #
 class puppetmaster::cleanup
 (
-    $max_report_age = 7,
-    $hour = '12',
-    $minute = '15',
-    $weekday = '*',
-    $email = $::servermonitor
+    Integer                  $max_report_age = 7,
+    Variant[String, Integer] $hour = '12',
+    Variant[String, Integer] $minute = '15',
+    Variant[String, Integer] $weekday = '*',
+    String                   $email = $::servermonitor
 
 ) inherits puppetmaster::params
 {

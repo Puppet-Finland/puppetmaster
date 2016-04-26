@@ -5,11 +5,11 @@
 #
 class puppetmaster::config
 (
-    $manage_puppetdb,
-    $puppetdb_proto,
-    $puppetdb_host,
-    $puppetdb_port,
-    $file_mode
+    Boolean $manage_puppetdb,
+    String $puppetdb_proto,
+    String $puppetdb_host,
+    Integer $puppetdb_port,
+    String $file_mode
 
 ) inherits puppetmaster::params
 {
