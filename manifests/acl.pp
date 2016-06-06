@@ -34,7 +34,9 @@ class puppetmaster::acl
         recurse => true,
         # What wouldn't we do to keep puppet-lint happy?
         paths   => [    "${basedir}/code",
-                        "${basedir}/.git", ],
+                        "${basedir}/.git",
+                        "${basedir}/.gitignore",
+                        "${basedir}/.gitmodules", ],
         acls    => [    'default:mask::rwx',
                         'mask::rwx',
                         "default:g:${l_group}:rwx",
