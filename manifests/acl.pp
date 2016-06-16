@@ -16,9 +16,14 @@
 #   The system group to grant access for. Defaults to $::os::params::sudogroup:
 #   "sudo" on Debian and "wheel" on RedHat.
 #
+# [*extra_paths*]
+#   Additional paths to set ACLs for. This can, for example, be used to set ACLs
+#   on .gitmodules appropriately.
+#
 class puppetmaster::acl
 (
-    Optional[String] $group = undef
+    Optional[String] $group = undef,
+    Optional[Array[String]] $extra_paths
 
 ) inherits puppetmaster::params {
 
@@ -29,14 +34,13 @@ class puppetmaster::acl
 
     $basedir = '/etc/puppetlabs'
 
+    $paths = concat(["${basedir}/code", "${basedir}/.git", "${basedir}/.gitignore"], $extra_paths)
+
     # Set ACLs for the files that need to be editable for all
     setfacl::target { 'etc-puppetlabs-code':
         recurse => true,
         # What wouldn't we do to keep puppet-lint happy?
-        paths   => [    "${basedir}/code",
-                        "${basedir}/.git",
-                        "${basedir}/.gitignore",
-                        "${basedir}/.gitmodules", ],
+        paths   => $paths,
         acls    => [    'default:mask::rwx',
                         'mask::rwx',
                         "default:g:${l_group}:rwx",

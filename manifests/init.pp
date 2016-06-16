@@ -18,6 +18,8 @@
 # [*acl_group*]
 #   The system group for which to grant access to /etc/puppetlabs. Defaults to
 #   $::os::params::sudogroup.
+# [*extra_acl_paths*]
+#   An array of additional paths to set ACLs for. Undefined by default.
 # [*puppetdb_proto*]
 #   PuppetDB's protocol. Defaults to 'https', which is typically the only valid 
 #   choice.
@@ -55,6 +57,7 @@ class puppetmaster
     $manage_puppetdb = true,
     $manage_acls = false,
     $acl_group = undef,
+    $extra_acl_paths = undef,
     $puppetdb_proto = 'https',
     $puppetdb_host = 'puppet',
     $puppetdb_port = 8081,
@@ -81,7 +84,8 @@ if $manage {
 
     if $manage_acls {
         class { '::puppetmaster::acl':
-            group => $acl_group,
+            group       => $acl_group,
+            extra_paths => $extra_acl_paths,
         }
     }
 
