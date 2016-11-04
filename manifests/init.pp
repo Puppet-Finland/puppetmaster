@@ -34,9 +34,11 @@
 #   permissions the File resource thinks (on every run) that file permissions
 #   have changed, which in turn will trigger Puppetserver and/or PuppetDB
 #   restarts.
-# [*allows*]
-#   A hash of puppetmaster::allow resources used to allow access to the 
+# [*ipv4_allows*]
+#   A hash of ::puppetmaster::ipv4_allow resources used to allow access to the 
 #   Puppetmaster through the firewall.
+# [*ipv6_allows*]
+#   Same as above but for ::puppetmaster::ipv6_allow.
 # [*monitor_email*]
 #   Email where monitoring emails are sent. Defautls to top-scope variable 
 #   $::servermonitor.
@@ -63,7 +65,8 @@ class puppetmaster
     $puppetdb_port = 8081,
     $file_mode = '0654',
     $monitor_email = $::servermonitor,
-    $allows = {}
+    $ipv4_allows = {},
+    $ipv6_allows = {}
 )
 {
 
@@ -96,7 +99,8 @@ if $manage {
     }
 
     if tagged('packetfilter') {
-        create_resources('puppetmaster::allow', $allows)
+        create_resources('puppetmaster::ipv4_allow', $ipv4_allows)
+        create_resources('puppetmaster::ipv6_allow', $ipv6_allows)
     }
 }
 }
