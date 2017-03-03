@@ -22,12 +22,13 @@ define puppetmaster::ipv6_allow
         default => $source,
     }
 
-    firewall { "005 ipv6 accept from ${title} to puppetmaster":
+    @firewall { "005 ipv6 accept from ${title} to puppetmaster":
         provider => 'iptables',
         chain    => 'INPUT',
         proto    => 'tcp',
         source   => $ipv6_source,
         dport    => 8140,
         action   => 'accept',
+        tag      => 'default',
     }
 }

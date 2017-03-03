@@ -23,12 +23,13 @@ define puppetmaster::ipv4_allow
         default => $source,
     }
 
-    firewall { "005 ipv4 accept from ${title} to puppetmaster":
+    @firewall { "005 ipv4 accept from ${title} to puppetmaster":
         provider => 'iptables',
         chain    => 'INPUT',
         proto    => 'tcp',
         source   => $ipv4_source,
         dport    => 8140,
         action   => 'accept',
+        tag      => 'default',
     }
 }

@@ -15,6 +15,10 @@
 # [*manage_acls*]
 #   Manage Extended ACLs for /etc/puppetlabs. Valid values are true (default)
 #   and false. See manifests/acl.pp for details and rationale.
+# [*manage_packetfilter*]
+#   Manage packet filtering rules. Valid values are true (default) and false.
+# [*manage_monit*]
+#   Manage monit rules. Valid values are true (default) and false.
 # [*acl_group*]
 #   The system group for which to grant access to /etc/puppetlabs. Defaults to
 #   $::os::params::sudogroup.
@@ -58,6 +62,8 @@ class puppetmaster
     $manage = true,
     $manage_puppetdb = true,
     $manage_acls = false,
+    $manage_packetfilter = true,
+    $manage_monit = true,
     $acl_group = undef,
     $extra_acl_paths = undef,
     $puppetdb_proto = 'https',
@@ -92,13 +98,13 @@ if $manage {
         }
     }
 
-    if tagged('monit') {
+    if $manage_monit {
         class { '::puppetmaster::monit':
             monitor_email => $monitor_email,
         }
     }
 
-    if tagged('packetfilter') {
+    if $manage_packetfilter {
         create_resources('puppetmaster::ipv4_allow', $ipv4_allows)
         create_resources('puppetmaster::ipv6_allow', $ipv6_allows)
     }
