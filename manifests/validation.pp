@@ -61,6 +61,11 @@
 #
 # <http://puppet-lint.com/checks/80chars/>
 #
+# The arrow alignment check gets horribly confused about hashes, and it is next 
+# to impossible to make it happy about them. So consider disabling it:
+#
+# <http://puppet-lint.com/checks/arrow_alignment/>
+#
 # References to $::modulename::params::some_long_variable_name are often very 
 # long, let alone the command-lines that combine several of them. To make things 
 # worse proper intendation adds to the line length. While splitting those long 
